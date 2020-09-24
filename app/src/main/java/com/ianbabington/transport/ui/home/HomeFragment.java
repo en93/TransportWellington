@@ -21,9 +21,9 @@ import com.ianbabington.transport.R;
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
-    private static AutoCompleteTextView autocompleteSearch;
+//    private static AutoCompleteTextView autocompleteSearch;
     private static AutoCompleteTextView autocompleteSearchPlaces;
-    private static String[] fruits = {"Apple", "Banana", "Cherry", "Date", "Grape", "Kiwi", "Mango", "Pear"};
+//    private static String[] fruits = {"Apple", "Banana", "Cherry", "Date", "Grape", "Kiwi", "Mango", "Pear"};
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -43,15 +43,15 @@ public class HomeFragment extends Fragment {
 
     public void onViewCreated (View view,  Bundle savedInstanceState){
         //Setup fruit
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.select_dialog_item, fruits);
-        autocompleteSearch = getView().findViewById(R.id.searchStopsHome);
-        autocompleteSearch.setThreshold(1);
-        autocompleteSearch.setAdapter(adapter);
+//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.select_dialog_item, fruits);
+//        autocompleteSearch = getView().findViewById(R.id.searchStopsHome);
+//        autocompleteSearch.setThreshold(1);
+//        autocompleteSearch.setAdapter(adapter);
 
         //Setup places
         StationAutoCompleteAdapter adapterPlaces = new StationAutoCompleteAdapter(getActivity());
         autocompleteSearchPlaces = getView().findViewById(R.id.searchStopsHomeAdapterTest);
-        autocompleteSearchPlaces.setThreshold(1);
+        autocompleteSearchPlaces.setThreshold(3);
         autocompleteSearchPlaces.setAdapter(adapterPlaces);
 
     }
