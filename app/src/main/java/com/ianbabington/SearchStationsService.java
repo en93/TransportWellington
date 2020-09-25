@@ -26,7 +26,10 @@ public class SearchStationsService {
      * @param searchTerm
      * @return
      */
-    public static synchronized List<Station> getStations(Context context, String searchTerm, List<Station> results){
+    private static final String TAG = "SearchStationsService";
+
+    public static synchronized List<Station> getStations(Context context, String searchTerm){
+        List<Station> results = new ArrayList<Station>();
         AndroidNetworking.initialize(context);
         AndroidNetworking.get("https://www.metlink.org.nz/api/v1/StopSearch/" + searchTerm)
             .build()
@@ -34,7 +37,6 @@ public class SearchStationsService {
                 @Override
                 public void onResponse(JSONArray response) {
                     //TODO Replace with a stream when can find a way to convert into list
-                    List<Station> searchResults = new ArrayList<Station>();
                     for(int i = 0; i<response.length(); i++){
                         try {
                             JSONObject jsonStation = response.getJSONObject(i);
@@ -42,21 +44,21 @@ public class SearchStationsService {
                             station.setStationID(jsonStation.getInt("ID"));
                             station.setStationNumber(jsonStation.getString("Sms"));
                             station.setStationName(jsonStation.getString("Name"));
-                            searchResults.add(station);
+                            results.add(station);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
-                    results.clear();
-                    results.addAll(searchResults);
                 }
                 //TODO show toast or something?
                 @Override
                 public void onError(ANError anError) {
                     //Something
-                    results.clear();
+//                    results.clear();
                 }
             });
+//        getStations
+        Log.d(TAG, "getStations returns " + results.size() + " elements. 1st is " + results.get(0).getStationName());
         return results;
     }
 

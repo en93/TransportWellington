@@ -22,23 +22,10 @@ public class StationAutoCompleteAdapter extends BaseAdapter implements Filterabl
     private static final int MAX_RESULTS = 3;
     private Context mContext;
     private static List<Station> results = new ArrayList<Station>();
-//    private static Station testStation1 = new Station(1, "5000", "Courtney");
-//    private static Station testStation2 = new Station(2, "5020", "Albert");
-//    private static Station testStation3 = new Station(3, "5040", "Dixon");
-//    private static Station testStation4 = new Station(4, "5060", "Lampton");
-//    private static Station testStation5 = new Station(5, "5080", "Queens");
-
-//    private static List<Station> mStations = Arrays.asList(testStation1, testStation2, testStation3);
-//            testStation4, testStation5);
-
-
-
 
     public StationAutoCompleteAdapter(Context context) {
         mContext = context;
     }
-
-    final private List<Station> mStations = new ArrayList<Station>();
 
     @Override
     public int getCount() {
@@ -75,10 +62,9 @@ public class StationAutoCompleteAdapter extends BaseAdapter implements Filterabl
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults filterResults = new FilterResults();
                 if(constraint != null) {
-                    List<Station> results = new ArrayList<Station>();
-                    SearchStationsService.getStations(mContext, constraint.toString(), mStations);
-                    filterResults.values = mStations;
-                    filterResults.count = mStations.size();
+                    List<Station> results = SearchStationsService.getStations(mContext, constraint.toString());
+                    filterResults.values = results;
+                    filterResults.count = results.size();
                 }
                 return filterResults;
             }
