@@ -47,7 +47,7 @@ public class StationAutoCompleteAdapter extends BaseAdapter implements Filterabl
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) mContext
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(android.R.layout.select_dialog_item, parent, false);
+            convertView = inflater.inflate(android.R.layout.simple_dropdown_item_1line, parent, false);
         }
         TextView tv = (TextView) convertView;
         Station station = (Station) getItem(position);

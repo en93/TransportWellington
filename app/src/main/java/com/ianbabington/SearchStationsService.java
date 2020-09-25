@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.Log;
 
 import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.ANRequest;
+import com.androidnetworking.common.ANResponse;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.ianbabington.transport.database.Station;
@@ -28,37 +30,37 @@ public class SearchStationsService {
      */
     private static final String TAG = "SearchStationsService";
 
+    //Get stations by search term, API requires at least 3 characters
     public static synchronized List<Station> getStations(Context context, String searchTerm){
         List<Station> results = new ArrayList<Station>();
         AndroidNetworking.initialize(context);
-        AndroidNetworking.get("https://www.metlink.org.nz/api/v1/StopSearch/" + searchTerm)
-            .build()
-            .getAsJSONArray(new JSONArrayRequestListener() {
-                @Override
-                public void onResponse(JSONArray response) {
-                    //TODO Replace with a stream when can find a way to convert into list
-                    for(int i = 0; i<response.length(); i++){
-                        try {
-                            JSONObject jsonStation = response.getJSONObject(i);
-                            Station station = new Station();
-                            station.setStationID(jsonStation.getInt("ID"));
-                            station.setStationNumber(jsonStation.getString("Sms"));
-                            station.setStationName(jsonStation.getString("Name"));
-                            results.add(station);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
+
+        //Create a synchronous request and run
+        ANRequest request = AndroidNetworking
+                .get("https://www.metlink.org.nz/api/v1/StopSearch/" + searchTerm).build();
+        ANResponse<JSONArray> response = request.executeForJSONArray();
+        if (response.isSuccess()) {
+            JSONArray jsonStations = response.getResult();
+            //Parse data, explain why lambda and for each doesn't work here
+            for(int i = 0; i<jsonStations.length(); i++){
+                try {
+                    JSONObject jsonStation = jsonStations.getJSONObject(i);
+                    Station station = new Station();
+                    station.setStationID(jsonStation.getInt("ID"));
+                    station.setStationNumber(jsonStation.getString("Sms"));
+                    station.setStationName(jsonStation.getString("Name"));
+                    results.add(station);
+                //Handle errors parsing data
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                //TODO show toast or something?
-                @Override
-                public void onError(ANError anError) {
-                    //Something
-//                    results.clear();
-                }
-            });
-//        getStations
-        Log.d(TAG, "getStations returns " + results.size() + " elements. 1st is " + results.get(0).getStationName());
+            }
+        } else {
+            //Handle error scenarios
+            results.clear();
+        }
+
+//        Log.d(TAG, "getStations returns " + results.size() + " elements. 1st is " + results.get(0).getStationName());
         return results;
     }
 
