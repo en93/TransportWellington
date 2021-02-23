@@ -1,10 +1,12 @@
 package com.ianbabington.transport.ui.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
+//import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,6 +19,8 @@ import android.widget.AutoCompleteTextView;
 
 import com.ianbabington.adapter.transport.StationAutoCompleteAdapter;
 import com.ianbabington.transport.R;
+import com.ianbabington.transport.StationRealtimeDetailsActivity;
+import com.ianbabington.transport.database.Station;
 
 public class HomeFragment extends Fragment {
 
@@ -53,6 +57,17 @@ public class HomeFragment extends Fragment {
         autocompleteSearchPlaces = getView().findViewById(R.id.searchStopsHomeAdapterTest);
         autocompleteSearchPlaces.setThreshold(3);
         autocompleteSearchPlaces.setAdapter(adapterPlaces);
+        autocompleteSearchPlaces.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                Station station = (Station) adapterView.getItemAtPosition(position);
+                autocompleteSearchPlaces.setText(station.getStationName());
+
+                Intent intent = new Intent(getActivity(), StationRealtimeDetailsActivity.class);
+                startActivity(intent);
+
+            }
+        });
 
     }
 
